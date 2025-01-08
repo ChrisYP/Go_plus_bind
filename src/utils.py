@@ -20,32 +20,7 @@ from Crypto.Util.Padding import pad
 from loguru import logger
 
 
-def suicide(endingFunc: Callable = None) -> None:
-    """程序自杀"""
-    if endingFunc:
-        if asyncio.iscoroutinefunction(endingFunc):
-            hasattr(
-                asyncio, "WindowsSelectorEventLoopPolicy"
-            ) and asyncio.set_event_loop_policy(
-                asyncio.WindowsSelectorEventLoopPolicy()
-            )
-            asyncio.run(endingFunc())
-        else:
-            endingFunc()
-    logger.warning("Process finished with exit code 15")
-    os.kill(os.getpid(), signal.SIGTERM)
-
-
 def aesEncrypt(content, key, iv="", encode="BASE64", decode=None):
-    """
-    AES 加密
-    :param content: 待加密文本
-    :param key: AES key
-    :param iv: AES iv(CBC模式才需要)
-    :param encode: HEX/BASE64
-    :param decode: key/iv 解码方式 None代表 .encode() "HEX" a2b_hex "BASE64"
-    :return:
-    """
     if decode == "HEX":
         key = a2b_hex(key)
         if iv:
